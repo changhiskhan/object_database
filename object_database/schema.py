@@ -138,9 +138,15 @@ class Schema:
         assert "." not in typename
 
         if typename.startswith("_"):
+            if typename not in self.__dict__:
+                raise AttributeError(typename)
+
             return self.__dict__[typename]
 
         if typename in self._supportingTypes:
+            if typename not in self._supportingTypes:
+                raise AttributeError(typename)
+
             return self._supportingTypes[typename]
 
         if typename not in self._types:
@@ -155,6 +161,9 @@ class Schema:
             self._field_types[typename] = {}
 
             self._undefinedTypes.add(typename)
+
+        if typename not in self._types:
+            raise AttributeError(typename)
 
         return self._types[typename]
 
